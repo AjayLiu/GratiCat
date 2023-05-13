@@ -2,11 +2,11 @@ import "dotenv/config";
 
 export default {
 	expo: {
-		name: "verde",
-		slug: "verde",
+		name: "graticat",
+		slug: "graticat",
 		version: "1.0.0",
 		orientation: "portrait",
-		icon: "./src/assets/icon.png",
+		// icon: "./src/assets/icon.png",
 		splash: {
 			image: "./src/assets/splash.png",
 			resizeMode: "contain",

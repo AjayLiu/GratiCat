@@ -1,6 +1,16 @@
 import React, { useState } from "react";
-import "@config/firebase";
+import { View, Text } from "react-native";
 
 export default function App() {
-	return;
+	return (
+		<View>
+			<Text>Hi</Text>
+			<Text>Ajay</Text>
+			<Text>Hi</Text>
+			<Text>Hi</Text>
+			<Text>Hi</Text>
+			<Text>Hi</Text>
+			<Text>Hi</Text>
+		</View>
+	);
 }
