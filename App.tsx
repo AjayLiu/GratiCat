@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
+import { ThemeProvider } from "react-native-elements";
+import "@config/firebase";
+import RootNavigation from "@navigation/index";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
 	return (
-		<View>
-			<Text>Hi</Text>
-			<Text>Ajay</Text>
-			<Text>Hi</Text>
-			<Text>Hi</Text>
-			<Text>Hi</Text>
-			<Text>Hi</Text>
-			<Text>Hi</Text>
-		</View>
+		<NavigationContainer>
+			<ThemeProvider>
+				<RootNavigation />
+			</ThemeProvider>
+		</NavigationContainer>
 	);
 }
