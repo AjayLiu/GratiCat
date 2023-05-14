@@ -1,6 +1,12 @@
 import React, { useEffect } from "react";
 import { RouterProps } from "../types";
-import { View, Text } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	TextInput,
+	Platform,
+} from "react-native";
 import { usePost } from "@utils/hooks/usePost";
 import { Button } from "react-native-elements";
 import { SelfPost } from "../types";
