@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { RouterProps } from "../types";
-import { View, Text, StyleSheet, TextInput, Platform, Modal, Animated, TouchableOpacity, ScrollView } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	TextInput,
+	Platform,
+	Modal,
+	Animated,
+	TouchableOpacity,
+	ScrollView,
+} from "react-native";
 import { usePost } from "@utils/hooks/usePost";
 import { Button } from "react-native-elements";
 import { SelfPost } from "../types";
@@ -12,49 +22,47 @@ import ProfileButton from "@components/ProfileButton";
 
 const auth = getAuth();
 
-
-
 export default function Home({ navigation }: RouterProps) {
 	const { authUser, fireUser } = useUser();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
 	const { getAllSelfPosts, calculateStreakCount } = usePost();
 	const [mySelfPosts, setMySelfPosts] = useState<SelfPost[]>([]);
 	const [currCat, changeCCat] = useState("");
 	const [visible, setVisible] = useState(false);
 
 	const fadeAnim = new Animated.Value(1);
-	
+
 	const reset = () => {
 		Animated.timing(fadeAnim, {
 			toValue: 1,
 			duration: 0,
 			useNativeDriver: false,
 		}).start();
-	}
+	};
 	const fade = () => {
 		Animated.timing(fadeAnim, {
-			toValue : 0,
+			toValue: 0,
 			duration: 1200,
 			useNativeDriver: false,
-		}).start(()=>{
+		}).start(() => {
 			setVisible(false);
 		});
-	}
+	};
 
-	const SlideOutModal = ({text}) => {
-		
-		
-		
-		  if (!visible) {
+	const SlideOutModal = ({ text }) => {
+		if (!visible) {
 			return null;
-		  }
-		
-		  return (
-			<Animated.View style={[styles.modalContainer, { opacity: fadeAnim  }]}>
-			  <Text style={styles.modalText}>{text}</Text>
+		}
+
+		return (
+			<Animated.View
+				style={[styles.modalContainer, { opacity: fadeAnim }]}
+			>
+				<Text style={styles.modalText}>{text}</Text>
 			</Animated.View>
-		  );
-		};
+		);
+	};
 
 	const jumpChangeCCat = (newCat) => {
 		reset();
@@ -62,13 +70,20 @@ export default function Home({ navigation }: RouterProps) {
 		changeCCat(newCat);
 		setVisible(true);
 		fade();
-	}
+	};
+	const resetForceLock = () => {
+		console.log("RESET FORCE LOCK");
+		setForceLock(false);
+	};
 	const [forceLock, setForceLock] = useState<boolean>(false);
 	useEffect(() => {
 		const getPosts = async () => {
 			const allPosts = await getAllSelfPosts(authUser?.uid || "");
 
 			// CHECK WHETHER OR NOT TO LOCK USER OUT (IF THEY HAVEN'T POSTED IN 24 HOURS OR NEVER POSTED)
+			if (allPosts && allPosts?.length == 0) {
+				setForceLock(true);
+			}
 			if (authUser?.uid) {
 				if (!allPosts || allPosts?.length == 0) {
 					setForceLock(true);
@@ -91,16 +106,17 @@ export default function Home({ navigation }: RouterProps) {
 		};
 
 		if (
-			!isLoading &&
-			fireUser?.selfPostsUids &&
-			fireUser.selfPostsUids.length != mySelfPosts.length
+			isFirstLoad ||
+			(!isLoading &&
+				fireUser?.selfPostsUids &&
+				fireUser.selfPostsUids.length != mySelfPosts.length)
 		) {
 			const refresh = async () => {
-				setIsLoading(true);
 				await getPosts();
 				await getStreak();
 
 				setIsLoading(false);
+				setIsFirstLoad(false);
 			};
 			refresh();
 		}
@@ -135,7 +151,10 @@ export default function Home({ navigation }: RouterProps) {
 			</View>
 			<View style={styles.footer}>
 				<ProfileButton />
-				<SelfPostModal forceLock={forceLock} />
+				<SelfPostModal
+					forceLock={forceLock}
+					resetForceLock={resetForceLock}
+				/>
 			</View>
 		</View>
 	);
@@ -177,22 +196,22 @@ const styles = StyleSheet.create({
 		marginVertical: 10,
 		//fontFamily: 'KALAM-REGULAR',
 		fontSize: 18,
-		fontFamily: 'KALAM-REGULAR',
+		fontFamily: "KALAM-REGULAR",
 	},
 	modalContainer: {
-		position: 'absolute',
+		position: "absolute",
 		top: 20,
 		right: 20,
 		width: 200,
 		height: 100,
-		backgroundColor: 'white',
+		backgroundColor: "white",
 		borderRadius: 8,
-		justifyContent: 'center',
-		alignItems: 'center',
+		justifyContent: "center",
+		alignItems: "center",
 		elevation: 4,
 	},
 	modalText: {
 		fontSize: 20,
-		fontWeight: 'bold',
+		fontWeight: "bold",
 	},
 });

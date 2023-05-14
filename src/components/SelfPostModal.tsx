@@ -18,6 +18,7 @@ import { SelfPost } from "src/types";
 
 interface Props {
 	forceLock: boolean;
+	resetForceLock: () => void;
 }
 const SelfPostModal = (props: Props) => {
 	const { makeSelfPost } = usePost();
@@ -29,7 +30,12 @@ const SelfPostModal = (props: Props) => {
 		setXButtonVisible(false);
 	};
 	useEffect(() => {
-		if (props.forceLock) forceLock();
+		console.log(props.forceLock);
+		if (props.forceLock) {
+			forceLock();
+		} else {
+			setXButtonVisible(true);
+		}
 	}, [props.forceLock]);
 	return (
 		<View>
@@ -69,6 +75,7 @@ const SelfPostModal = (props: Props) => {
 								onPress={async () => {
 									const cat = await makeSelfPost(text);
 									setModalVisible(!modalVisible);
+									props.resetForceLock();
 									alert(cat);
 								}}
 							>
@@ -154,7 +161,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "#d5d0cd",
 		padding: 10,
 		borderRadius: 10,
-		height: 70
+		height: 70,
 	},
 	textStyle: {
 		color: "white",
