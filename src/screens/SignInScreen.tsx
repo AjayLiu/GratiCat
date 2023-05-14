@@ -193,8 +193,8 @@ const styles = StyleSheet.create({
 		backgroundColor: '#F8F4E3',
         borderRadius: 10,
         padding: 20,
-        width: '80%', // adjust this as per your need
-        margin: 10, // adjust this as per your need
+        width: '80%',
+        margin: 10,
     },
 	blankSection: {
 		flex: 0.4,
