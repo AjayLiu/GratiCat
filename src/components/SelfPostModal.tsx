@@ -3,6 +3,7 @@ import { useUser } from "@utils/hooks/useUser";
 import React, { useState, useEffect } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+
 import {
 	Alert,
 	Modal,
@@ -69,7 +70,8 @@ const SelfPostModal = (props: Props) => {
 								onPress={async () => {
 									const cat = await makeSelfPost(text);
 									setModalVisible(!modalVisible);
-									alert(cat);
+									// props.jump(cat);
+									Alert.alert("category", cat);
 								}}
 							>
 								<Ionicons name="send-outline" color={"white"} />

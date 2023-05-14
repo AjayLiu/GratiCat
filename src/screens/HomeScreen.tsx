@@ -27,7 +27,7 @@ export default function Home({ navigation }: RouterProps) {
 	const reset = () => {
 		Animated.timing(fadeAnim, {
 			toValue: 1,
-			duration: 0,
+			duration: 1200,
 			useNativeDriver: false,
 		}).start();
 	}
@@ -59,6 +59,7 @@ export default function Home({ navigation }: RouterProps) {
 	const jumpChangeCCat = (newCat) => {
 		reset();
 		console.log(newCat);
+		console.log("BRUH");
 		changeCCat(newCat);
 		setVisible(true);
 		fade();
@@ -110,6 +111,9 @@ export default function Home({ navigation }: RouterProps) {
 
 	return (
 		<View style={styles.background}>
+			{/* <SlideOutModal visible = {visible} style= {styles.modalContainer, [{opacity : fadeAnim}]}>
+				<Text style = {styles.modalText}>{currCat}</Text>
+			</SlideOutModal> */}
 			<View style={[styles.container, { marginTop: 80 }]}>
 				<Text style={{ fontSize: 150 }}>{streakCount}</Text>
 				<Text style={{ fontSize: 30, textAlign: "center" }}>
@@ -135,7 +139,7 @@ export default function Home({ navigation }: RouterProps) {
 			</View>
 			<View style={styles.footer}>
 				<ProfileButton />
-				<SelfPostModal forceLock={forceLock} />
+				<SelfPostModal forceLock={forceLock} jump = {jumpChangeCCat} />
 			</View>
 		</View>
 	);
