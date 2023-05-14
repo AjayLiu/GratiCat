@@ -60,7 +60,7 @@ export default function SignInScreen({ navigation }: RouterProps) {
 				recaptchaVerifier.current,
 			); // get the verification id
 			setVerificationID(verificationId); // set the verification id
-			setInfo("Success : Verification code has been sent to your phone"); // If Ok, show message.
+			setInfo("Verification code has been sent to your phone!"); // If Ok, show message.
 		} catch (error) {
 			setInfo(`Error : ${error}`); // show the error
 		}
@@ -133,7 +133,7 @@ export default function SignInScreen({ navigation }: RouterProps) {
 				verificationId && (
 					<View style={[styles.container, styles.phoneSection]}>
 						<Text style={styles.text}>
-							Enter the verification code
+							Enter your verification code
 						</Text>
 
 						<TextInput
@@ -144,7 +144,7 @@ export default function SignInScreen({ navigation }: RouterProps) {
 							onChangeText={setVerificationCode}
 						/>
 						<TouchableOpacity
-							style={[styles.button, {borderRadius: 10}]}
+							style={[styles.button, {borderRadius: 10, opacity : (verificationCode ? 1 : 0.3)}]}
 							disabled={!verificationCode}
 							onPress={() => handleVerifyVerificationCode()}
 						>

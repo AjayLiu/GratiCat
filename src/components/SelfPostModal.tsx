@@ -1,6 +1,6 @@
 import { usePost } from "@utils/hooks/usePost";
 import { useUser } from "@utils/hooks/useUser";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import {
@@ -11,9 +11,12 @@ import {
 	Pressable,
 	View,
 	TextInput,
+	Animated,
 } from "react-native";
 
-const SelfPostModal = () => {
+
+
+const SelfPostModal = ({runningCat}) => {
 	const { makeSelfPost } = usePost();
 	const [modalVisible, setModalVisible] = useState(false);
 	const [text, onChangeText] = React.useState("");
@@ -48,7 +51,8 @@ const SelfPostModal = () => {
 							<Pressable
 								style={[styles.button, styles.buttonSubmit]}
 								onPress={async () => {
-									await makeSelfPost(text);
+									const category = await makeSelfPost(text);
+									runningCat(category);
 								}}
 							>
 								<Ionicons name="send-outline" color={"white"} />

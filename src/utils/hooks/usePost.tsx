@@ -65,6 +65,8 @@ export function usePost() {
 			selfPostsUids: arrayUnion(selfPost.uid),
 		});
 		await fetchFireUser();
+
+		return category;
 	};
 
 	const calculateStreakCount = async () => {
