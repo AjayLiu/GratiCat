@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import HomeScreen from "@screens/HomeScreen";
+import ProfileScreen from "@screens/Profile";
 import { useUser } from "@utils/hooks/useUser";
 
 import FireUserContext from "../contexts/fireUser";
@@ -35,6 +36,7 @@ export default function UserStack() {
 				}}
 			>
 				<Stack.Screen name="Home" component={HomeScreen} />
+				<Stack.Screen name="Profile" component={ProfileScreen} />
 			</Stack.Navigator>
 		</FireUserContext.Provider>
 	);

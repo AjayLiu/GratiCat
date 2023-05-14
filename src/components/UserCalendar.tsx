@@ -1,0 +1,101 @@
+import React from "react";
+import { SelfPost } from "src/types";
+import { useUser } from "@utils/hooks/useUser";
+import { getCalendarDateString } from "react-native-calendars/src/services";
+import { DateData, MarkedDates } from "react-native-calendars/src/types";
+import { Calendar } from "react-native-calendars";
+
+type UserCalendarProps = {
+	posts: SelfPost[];
+	dayPress: (day: DateData) => void;
+	selected: DateData;
+};
+
+const UserCalendar = (props: UserCalendarProps) => {
+	const { fireUser } = useUser();
+
+	function getDates() {
+		const authPosts: SelfPost[] = [];
+		props.posts.forEach((post) => {
+			if (post.authorUid === fireUser?.uid) {
+				authPosts.push(post);
+			}
+		});
+
+		// Uncomment for testing
+		// authPosts.push({
+		// 	timestamp: Timestamp.fromDate(new Date(2023, 0, 1)),
+		// } as Post);
+		// authPosts.reverse();
+
+		const dates: MarkedDates = {};
+		let starting = false;
+		let ending = false;
+
+		authPosts.reverse().forEach((post, index) => {
+			const timestamp = post.timestamp.toDate();
+
+			if (index === 0) {
+				starting = true;
+			} else {
+				starting =
+					timestamp.getDate() - 1 !==
+					authPosts[index - 1].timestamp.toDate().getDate();
+			}
+			if (index === authPosts.length - 1) {
+				ending = true;
+			} else {
+				ending =
+					timestamp.getDate() + 1 !==
+					authPosts[index + 1].timestamp.toDate().getDate();
+			}
+
+			const date: string = getCalendarDateString(timestamp);
+
+			dates[date] = {
+				color: "#138a36", // dark green (hard coded from colors.ts)
+				startingDay: starting,
+				endingDay: ending,
+				dotColor: "#e2e4f6", // off white (hard coded from colors.ts)
+				marked: false,
+			};
+		});
+
+		if (dates[props.selected.dateString]) {
+			dates[props.selected.dateString].dotColor = "#e2e4f6"; // off white (hard coded from colors.ts)
+			dates[props.selected.dateString].marked = true;
+		} else {
+			dates[props.selected.dateString] = {
+				dotColor: "#e2e4f6", // off white (hard coded from colors.ts)
+				marked: true,
+			};
+		}
+
+		return dates;
+	}
+
+	return (
+		<Calendar
+			maxDate={getCalendarDateString(new Date())}
+			// hideArrows={true}
+			disableMonthChange={true}
+			hideDayNames={true}
+			// renderHeader={() => {
+			// 	return null;
+			// }}
+			markingType={"period"}
+			markedDates={getDates()}
+			onDayPress={(day) => props.dayPress(day)}
+			// hard coding colors from colors.ts because not sure what else to do
+			theme={{
+				calendarBackground: "#232020", // off black
+				dayTextColor: "#e2e4f6", // off white
+				textDisabledColor: "gray",
+				arrowColor: "#138a36", // dark green
+				monthTextColor: "#e2e4f6", // off white
+			}}
+		/>
+	);
+};
+
+export default UserCalendar;

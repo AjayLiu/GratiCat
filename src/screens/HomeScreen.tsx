@@ -34,9 +34,9 @@ export default function Home({ navigation }: RouterProps) {
 		) {
 			const refresh = async () => {
 				setIsLoading(true);
-				console.log(
-					fireUser.selfPostsUids.length + " vs " + mySelfPosts.length,
-				);
+				// console.log(
+				// 	fireUser.selfPostsUids.length + " vs " + mySelfPosts.length,
+				// );
 				await getPosts();
 				await getStreak();
 				setIsLoading(false);
@@ -49,7 +49,7 @@ export default function Home({ navigation }: RouterProps) {
 	return (
 		<View style={styles.background}>
 			<View style={[styles.container, { marginTop: 80 }]}>
-				<Text style={{ fontSize: 150 }}>12</Text>
+				<Text style={{ fontSize: 150 }}>{streakCount}</Text>
 				<Text style={{ fontSize: 30, textAlign: "center" }}>
 					consecutive days you've loved yourself!
 				</Text>
