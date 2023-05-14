@@ -24,9 +24,26 @@ export default function Home({ navigation }: RouterProps) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const { getAllSelfPosts, calculateStreakCount } = usePost();
 	const [mySelfPosts, setMySelfPosts] = useState<SelfPost[]>([]);
+	const [forceLock, setForceLock] = useState<boolean>(false);
 	useEffect(() => {
 		const getPosts = async () => {
 			const allPosts = await getAllSelfPosts(authUser?.uid || "");
+
+			// CHECK WHETHER OR NOT TO LOCK USER OUT (IF THEY HAVEN'T POSTED IN 24 HOURS OR NEVER POSTED)
+			if (authUser?.uid) {
+				if (!allPosts || allPosts?.length == 0) {
+					setForceLock(true);
+				} else {
+					const latestPost = allPosts[allPosts.length - 1];
+					if (
+						Date.now() / 1000 - latestPost.timestamp.seconds >
+						60 * 60 * 24
+					) {
+						setForceLock(true);
+					}
+				}
+			}
+
 			setMySelfPosts(allPosts || []);
 		};
 		const getStreak = async () => {
@@ -43,6 +60,7 @@ export default function Home({ navigation }: RouterProps) {
 				setIsLoading(true);
 				await getPosts();
 				await getStreak();
+
 				setIsLoading(false);
 			};
 			refresh();
@@ -101,7 +119,7 @@ export default function Home({ navigation }: RouterProps) {
 			</View>
 			<View style={styles.footer}>
 				<ProfileButton />
-				<SelfPostModal posts={mySelfPosts} />
+				<SelfPostModal forceLock={forceLock} />
 			</View>
 		</View>
 	);

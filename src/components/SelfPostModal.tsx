@@ -16,29 +16,20 @@ import {
 import { SelfPost } from "src/types";
 
 interface Props {
-	posts: SelfPost[];
+	forceLock: boolean;
 }
 const SelfPostModal = (props: Props) => {
 	const { makeSelfPost } = usePost();
 	const [modalVisible, setModalVisible] = useState(false);
 	const [xButtonVisible, setXButtonVisible] = useState(true);
 	const [text, onChangeText] = React.useState("");
-	const checkForDailyLock = async () => {
-		if (props.posts.length == 0) {
-			setModalVisible(true);
-			setXButtonVisible(false);
-			return;
-		}
-
-		const latestPost = props.posts[0];
-		if (Date.now() / 1000 - latestPost.timestamp.seconds > 60 * 60 * 24) {
-			setModalVisible(true);
-			setXButtonVisible(false);
-		}
+	const forceLock = async () => {
+		setModalVisible(true);
+		setXButtonVisible(false);
 	};
 	useEffect(() => {
-		checkForDailyLock();
-	}, []);
+		if (props.forceLock) forceLock();
+	}, [props.forceLock]);
 	return (
 		<View>
 			<Modal
