@@ -15,7 +15,6 @@ import {
 
 const SelfPostModal = () => {
 	const { makeSelfPost } = usePost();
-	const { fetchFireUser } = useUser();
 	const [modalVisible, setModalVisible] = useState(false);
 	const [text, onChangeText] = React.useState("");
 	return (
@@ -50,7 +49,6 @@ const SelfPostModal = () => {
 								style={[styles.button, styles.buttonSubmit]}
 								onPress={async () => {
 									await makeSelfPost(text);
-									await fetchFireUser();
 								}}
 							>
 								<Ionicons name="send-outline" color={"white"} />

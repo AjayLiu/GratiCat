@@ -7,6 +7,8 @@ import {
 	Platform,
 	TouchableOpacity,
 	Image,
+	Keyboard, 
+	TouchableWithoutFeedback,
 } from "react-native";
 import { useState, useRef } from "react";
 import { getApp, initializeApp } from "firebase/app";
@@ -78,8 +80,15 @@ export default function SignInScreen({ navigation }: RouterProps) {
 		}
 	};
 	return (
-		<View style={styles.container}>
-			<Image source={logo} style={{width: 100, height: 100}} />
+		<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+		<View style={[
+			styles.container,
+			{
+			  // Try setting `flexDirection` to `"row"`.
+			  flexDirection: 'column',
+			},
+		  ]}>
+			<Image source={logo} style={{flex: 0.4, width: '100%', height: undefined, marginTop: 50}} resizeMode="contain" />
 			<FirebaseRecaptchaVerifierModal
 				ref={recaptchaVerifier}
 				firebaseConfig={firebaseConfig}
@@ -90,11 +99,13 @@ export default function SignInScreen({ navigation }: RouterProps) {
 			{
 				// show the phone number input field when verification id is not set.
 				!verificationId && (
-					<View style={styles.container}>
+					<View style={[styles.container, styles.phoneSection]}>
 						<Text style={styles.text}>Phone Number</Text>
 
 						<TextInput
+							style={styles.input}
 							placeholder="+2547000000"
+							placeholderTextColor="#F8F4E3"
 							autoFocus
 							autoComplete="tel"
 							keyboardType="phone-pad"
@@ -105,7 +116,7 @@ export default function SignInScreen({ navigation }: RouterProps) {
 						/>
 
 						<TouchableOpacity
-							style={styles.button}
+							style={[styles.button, {borderRadius: 10}]}
 							onPress={() => handleSendVerificationCode()}
 							disabled={!phoneNumber}
 						>
@@ -120,34 +131,44 @@ export default function SignInScreen({ navigation }: RouterProps) {
 			{
 				// if verification id exists show the confirm code input field.
 				verificationId && (
-					<View>
+					<View style={[styles.container, styles.phoneSection]}>
 						<Text style={styles.text}>
 							Enter the verification code
 						</Text>
 
 						<TextInput
+							style={styles.input}
 							editable={!!verificationId}
 							placeholder="123456"
+							placeholderTextColor="#F8F4E3"
 							onChangeText={setVerificationCode}
 						/>
-
-						<Button
-							title="Confirm Verification Code"
+						<TouchableOpacity
+							style={[styles.button, {borderRadius: 10}]}
 							disabled={!verificationCode}
 							onPress={() => handleVerifyVerificationCode()}
-						/>
+						>
+							<Text style={styles.text}>
+								Confirm Verification Code
+							</Text>
+						</TouchableOpacity>
 					</View>
 				)
 			}
 
 			{attemptInvisibleVerification && <FirebaseRecaptchaBanner />}
+			<View style={{flex: 0.4}} />
 		</View>
+		</TouchableWithoutFeedback>
 	);
 }
 
 const styles = StyleSheet.create({
 	text: {
 		color: "#1D201F",
+		marginVertical: 10,
+		//fontFamily: 'KALAM-REGULAR',
+		fontSize: 18,
 	},
 	container: {
 		flex: 1,
@@ -160,4 +181,23 @@ const styles = StyleSheet.create({
 		padding: 10,
 		alignItems: 'center',
 	  },
+	input: {
+		backgroundColor: '#D5D0CD',
+        width: '100%',
+        borderRadius: 10,
+        padding: 10,
+        marginVertical: 10,
+    },
+    phoneSection: {
+        flex: 0.23,
+		backgroundColor: '#F8F4E3',
+        borderRadius: 10,
+        padding: 20,
+        width: '80%', // adjust this as per your need
+        margin: 10, // adjust this as per your need
+    },
+	blankSection: {
+		flex: 0.4,
+		backgroundColor: '#846C5B'
+	}
 });
