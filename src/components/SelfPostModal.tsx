@@ -61,7 +61,11 @@ const SelfPostModal = () => {
 				style={[styles.button, styles.buttonOpen]}
 				onPress={() => setModalVisible(true)}
 			>
-				<Text style={styles.textStyle}>Show Modal</Text>
+				<Ionicons
+					name="add-circle-outline"
+					color={"#f8f4e3"}
+					size={55}
+				/>
 			</Pressable>
 		</View>
 	);
@@ -93,9 +97,13 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 		padding: 5,
 		elevation: 2,
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	buttonOpen: {
 		backgroundColor: "#e9637c",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	buttonClose: {
 		backgroundColor: "#e9637c",
