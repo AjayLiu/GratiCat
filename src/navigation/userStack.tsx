@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { createStackNavigator } from "@react-navigation/stack";
@@ -6,10 +6,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "@screens/HomeScreen";
 import { useUser } from "@utils/hooks/useUser";
 
+import FireUserContext from "../contexts/fireUser";
+import { FirestoreUser } from "src/types";
+
 const Stack = createStackNavigator();
 
 export default function UserStack() {
 	const { authUser, getUserFromFirestore, createUser } = useUser();
+	const [fireUser, setFireUser] = useState({} as FirestoreUser);
+
 	useEffect(() => {
 		const checkIfUserCreated = async () => {
 			if (!authUser) return;
@@ -22,13 +27,15 @@ export default function UserStack() {
 		checkIfUserCreated();
 	}, [authUser]);
 	return (
-		<Stack.Navigator
-			screenOptions={{
-				headerShown: false,
-				headerBackTitleVisible: false,
-			}}
-		>
-			<Stack.Screen name="Home" component={HomeScreen} />
-		</Stack.Navigator>
+		<FireUserContext.Provider value={{ fireUser, setFireUser }}>
+			<Stack.Navigator
+				screenOptions={{
+					headerShown: false,
+					headerBackTitleVisible: false,
+				}}
+			>
+				<Stack.Screen name="Home" component={HomeScreen} />
+			</Stack.Navigator>
+		</FireUserContext.Provider>
 	);
 }

@@ -20,22 +20,27 @@ import {
 } from "firebase/firestore";
 import { db } from "@config/firebase";
 import { uuidv4 } from "@firebase/util";
-const auth = getAuth();
 import { useUser } from "./useUser";
-import { useLinkBuilder } from "@react-navigation/native";
 
 export function usePost() {
-	const { fireUser, fetchFireUser, authUser } = useUser();
+	const { fireUser, fetchFireUser, getUserFromFirestore } = useUser();
 
-	const getMySelfPosts = async () => {
+	const getAllSelfPosts = async (uid: string) => {
 		// first get user's list of self posts' uids
-		await fetchFireUser();
-		const listOfSelfPostUids = fireUser?.selfPostsUids;
-		if (!listOfSelfPostUids) return [];
+		const fetchedUser = await getUserFromFirestore(uid);
+		if (fetchedUser == -1) {
+			console.log("No user found.");
+			return;
+		}
+
+		if (!fetchedUser.selfPostsUids) {
+			console.log("No self posts found.");
+			return [];
+		}
 
 		// then get the self posts from the list of uids
 		const selfPosts: SelfPost[] = [];
-		for (const uid of listOfSelfPostUids) {
+		for (const uid of fetchedUser.selfPostsUids) {
 			const snapshot = await getDoc(doc(db, "selfPosts", uid));
 			const thisPost = snapshot.data() as SelfPost;
 			selfPosts.push(thisPost);
@@ -56,12 +61,13 @@ export function usePost() {
 		};
 
 		// add self post to self posts collection
-		setDoc(doc(db, "selfPosts", selfPost.uid), selfPost);
+		await setDoc(doc(db, "selfPosts", selfPost.uid), selfPost);
 
 		// add self post to user's list of self posts
-		updateDoc(doc(db, "users", fireUser.uid), {
+		await updateDoc(doc(db, "users", fireUser.uid), {
 			selfPostsUids: arrayUnion(selfPost.uid),
 		});
+		await fetchFireUser();
 	};
-	return { getMySelfPosts, makeSelfPost };
+	return { getAllSelfPosts, makeSelfPost };
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { RouterProps } from "../types";
 import {
 	View,
@@ -11,28 +11,27 @@ import { usePost } from "@utils/hooks/usePost";
 import { Button } from "react-native-elements";
 import { SelfPost } from "../types";
 import { getAuth, signOut } from "firebase/auth";
+import { useUser } from "@utils/hooks/useUser";
+import SelfPostModal from "@components/SelfPostModal";
 
 const auth = getAuth();
 
 export default function Home({ navigation }: RouterProps) {
-	const { getMySelfPosts, makeSelfPost } = usePost();
-	let mySelfPosts: SelfPost[] = [];
+	const { authUser, fireUser } = useUser();
+	const { getAllSelfPosts } = usePost();
+	const [mySelfPosts, setMySelfPosts] = useState<SelfPost[]>([]);
 	useEffect(() => {
 		const getPosts = async () => {
-			mySelfPosts = await getMySelfPosts();
-			console.log(mySelfPosts);
+			setMySelfPosts((await getAllSelfPosts(authUser?.uid || "")) || []);
 		};
-		getPosts();
-	}, []);
+
+		if (authUser) {
+			// console.log("authUser found.");
+			getPosts();
+		}
+	}, [fireUser.selfPostsUids]);
 	return (
 		<View>
-			<Button
-				style={{ marginTop: 100, width: 100, height: 100 }}
-				onPress={() => {
-					makeSelfPost("hello");
-				}}
-				title="POST!"
-			></Button>
 			{mySelfPosts.map((post) => {
 				return (
 					<View key={post.uid}>
@@ -48,6 +47,7 @@ export default function Home({ navigation }: RouterProps) {
 					title="Sign out"
 				></Button>
 			</View>
+			<SelfPostModal />
 		</View>
 	);
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import {
 	deleteUser,
@@ -10,12 +10,13 @@ import {
 import { FirestoreUser } from "src/types";
 import { getDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@config/firebase";
+import FireUserContext from "../../contexts/fireUser";
 
 const auth = getAuth();
 
 export function useUser() {
 	const [authUser, setAuthUser] = useState<User>();
-	const [fireUser, setFireUser] = useState<FirestoreUser>();
+	const { fireUser, setFireUser } = useContext(FireUserContext);
 
 	// Auth changes
 	useEffect(() => {

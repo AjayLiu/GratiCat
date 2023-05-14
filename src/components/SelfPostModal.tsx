@@ -1,3 +1,5 @@
+import { usePost } from "@utils/hooks/usePost";
+import { useUser } from "@utils/hooks/useUser";
 import React, { useState } from "react";
 
 import {
@@ -11,6 +13,8 @@ import {
 } from "react-native";
 
 const SelfPostModal = () => {
+	const { makeSelfPost } = usePost();
+	const { fetchFireUser } = useUser();
 	const [modalVisible, setModalVisible] = useState(false);
 	const [text, onChangeText] = React.useState("");
 	return (
@@ -42,6 +46,15 @@ const SelfPostModal = () => {
 							placeholder="Write text here"
 							placeholderTextColor={"#846c5b"}
 						/>
+						<Pressable
+							style={[styles.button, styles.buttonClose]}
+							onPress={async () => {
+								await makeSelfPost(text);
+								await fetchFireUser();
+							}}
+						>
+							<Text> Submit </Text>
+						</Pressable>
 					</View>
 				</View>
 			</Modal>
