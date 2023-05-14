@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import categorise_vector, {get_closest_category} from "./Vector";
+import word_embeddings from "./word_embeddings.json";
 
 import {} from "firebase/auth";
 import { FirestoreUser, SelfPost, SocialPost } from "src/types";
@@ -44,13 +46,17 @@ export function usePost() {
 	const makeSelfPost = async (content: string) => {
 		await fetchFireUser();
 		if (!fireUser) return;
+		const embedding = await categorise_vector(content);
+		const category = await get_closest_category(embedding, word_embeddings);
 
 		const selfPost: SelfPost = {
 			uid: uuidv4(),
 			authorUid: fireUser?.uid,
 			timestamp: Timestamp.now(),
 			content: content,
+			category: category,
 		};
+		console.log(category);
 
 		// add self post to self posts collection
 		await setDoc(doc(db, "selfPosts", selfPost.uid), selfPost);

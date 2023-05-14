@@ -21,6 +21,7 @@ export interface SelfPost {
 	authorUid: string;
 	timestamp: Timestamp;
 	content: string;
+	category: string;
 }
 
 export interface SocialPost {
