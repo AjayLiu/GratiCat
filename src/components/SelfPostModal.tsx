@@ -80,7 +80,7 @@ const SelfPostModal = (props: Props) => {
 									alert(cat);
 								}}
 							>
-								<Ionicons name="send-outline" color={"white"}/>
+								<Ionicons name="send-outline" color={"#f8f4e3"}/>
 							</Pressable>
 						</View>
 					</View>
