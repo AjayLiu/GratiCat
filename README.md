@@ -1,6 +1,9 @@
 # GratiCat
 ## An AI-backed mentality booster made for SB HACKS
 
+## What we learned
+Link to Hackathon presentation: https://www.canva.com/design/DAFi60nvnhc/PsqNYglT9VJB4Oc6XHJnNQ/view?utm_content=DAFi60nvnhc&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink
+
 ## Inspiration
 😊 According to a study conducted by Harvard University, gratitude helps people feel more positive emotions, relish good experiences, improve their health, deal with adversity, and build strong relationships.
 
