@@ -15,6 +15,7 @@ import {
 } from "react-native";
 
 import { SelfPost } from "src/types";
+import { AuthErrorCode } from "@firebase/auth/dist/rn/src/core/errors";
 
 interface Props {
 	forceLock: boolean;
@@ -125,7 +126,10 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		borderRadius: 20,
-		padding: 2,
+		paddingTop: 5,
+		paddingBottom: 5,
+		paddingLeft: 8,
+		paddingRight: 5,
 		elevation: 2,
 		justifyContent: "center",
 		alignItems: "center",
