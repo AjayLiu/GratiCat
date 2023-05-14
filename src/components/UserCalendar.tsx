@@ -88,10 +88,10 @@ const UserCalendar = (props: UserCalendarProps) => {
 			onDayPress={(day) => props.dayPress(day)}
 			// hard coding colors from colors.ts because not sure what else to do
 			theme={{
-				calendarBackground: "#232020", // off black
+				calendarBackground: "#1d201f", // off black
 				dayTextColor: "#e2e4f6", // off white
 				textDisabledColor: "gray",
-				arrowColor: "#138a36", // dark green
+				arrowColor: "#E9637C", // dark green
 				monthTextColor: "#e2e4f6", // off white
 			}}
 		/>

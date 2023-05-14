@@ -3,8 +3,11 @@ import { TouchableOpacity, StyleSheet, View, Text } from "react-native";
 import { IconType } from "react-icons";
 import { useNavigation } from "@react-navigation/native";
 import profile from "../assets/images/GratiCatLogo.png";
+import { Image } from "react-native-elements";
+import { useUser } from "@utils/hooks/useUser";
 
 const ProfileButton = ({}) => {
+	const { authUser } = useUser();
 	const navigation = useNavigation();
 
 	return (
@@ -13,7 +16,7 @@ const ProfileButton = ({}) => {
 			style={styles.container}
 		>
 			<View style={styles.profileIconContainer}>
-				{/* <Image source={profile} styles={styles.image} /> */}
+				<Image source={{ uri: authUser?.photoURL }} />
 			</View>
 		</TouchableOpacity>
 	);

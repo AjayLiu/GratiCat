@@ -14,12 +14,23 @@ import {
 	Animated,
 } from "react-native";
 
+import { SelfPost } from "src/types";
 
-
-const SelfPostModal = ({runningCat}) => {
+interface Props {
+	forceLock: boolean;
+}
+const SelfPostModal = (props: Props) => {
 	const { makeSelfPost } = usePost();
 	const [modalVisible, setModalVisible] = useState(false);
+	const [xButtonVisible, setXButtonVisible] = useState(true);
 	const [text, onChangeText] = React.useState("");
+	const forceLock = async () => {
+		setModalVisible(true);
+		setXButtonVisible(false);
+	};
+	useEffect(() => {
+		if (props.forceLock) forceLock();
+	}, [props.forceLock]);
 	return (
 		<View>
 			<Modal
@@ -33,26 +44,31 @@ const SelfPostModal = ({runningCat}) => {
 			>
 				<View style={styles.centeredView}>
 					<View style={styles.modalView}>
-						<Pressable
-							style={[styles.button, styles.buttonClose]}
-							onPress={() => setModalVisible(!modalVisible)}
-						>
-							<Ionicons name="close-circle-outline" size={20} />
-						</Pressable>
+						{xButtonVisible && (
+							<Pressable
+								style={[styles.button, styles.buttonClose]}
+								onPress={() => setModalVisible(!modalVisible)}
+							>
+								<Ionicons
+									name="close-circle-outline"
+									size={20}
+								/>
+							</Pressable>
+						)}
 						<View style={styles.note}>
 							<TextInput
 								style={styles.input}
 								onChangeText={onChangeText}
 								value={text}
 								multiline={true}
-								placeholder="I'm thankful for..."
+								placeholder="I'm Grateful for..."
 								placeholderTextColor={"#846c5b"}
 							/>
 							<Pressable
 								style={[styles.button, styles.buttonSubmit]}
 								onPress={async () => {
-									const category = await makeSelfPost(text);
-									runningCat(category);
+									await makeSelfPost(text);
+									setModalVisible(!modalVisible);
 								}}
 							>
 								<Ionicons name="send-outline" color={"white"} />
@@ -81,10 +97,11 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		marginTop: 10,
+		backgroundColor: "rgba(0,0,0,0.9)",
 	},
 	modalView: {
 		margin: 20,
-		backgroundColor: "white",
+		backgroundColor: "#f8f4e3",
 		borderRadius: 20,
 		padding: 30,
 		alignItems: "center",

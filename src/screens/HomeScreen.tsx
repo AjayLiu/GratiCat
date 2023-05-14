@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { RouterProps } from "../types";
-import { View, Text, StyleSheet, TextInput, Platform, Modal, Animated } from "react-native";
+import { View, Text, StyleSheet, TextInput, Platform, Modal, Animated, TouchableOpacity } from "react-native";
 import { usePost } from "@utils/hooks/usePost";
 import { Button } from "react-native-elements";
 import { SelfPost } from "../types";
@@ -63,9 +63,26 @@ export default function Home({ navigation }: RouterProps) {
 		setVisible(true);
 		fade();
 	}
+	const [forceLock, setForceLock] = useState<boolean>(false);
 	useEffect(() => {
 		const getPosts = async () => {
 			const allPosts = await getAllSelfPosts(authUser?.uid || "");
+
+			// CHECK WHETHER OR NOT TO LOCK USER OUT (IF THEY HAVEN'T POSTED IN 24 HOURS OR NEVER POSTED)
+			if (authUser?.uid) {
+				if (!allPosts || allPosts?.length == 0) {
+					setForceLock(true);
+				} else {
+					const latestPost = allPosts[allPosts.length - 1];
+					if (
+						Date.now() / 1000 - latestPost.timestamp.seconds >
+						60 * 60 * 24
+					) {
+						setForceLock(true);
+					}
+				}
+			}
+
 			setMySelfPosts(allPosts || []);
 		};
 		const getStreak = async () => {
@@ -80,11 +97,9 @@ export default function Home({ navigation }: RouterProps) {
 		) {
 			const refresh = async () => {
 				setIsLoading(true);
-				// console.log(
-				// 	fireUser.selfPostsUids.length + " vs " + mySelfPosts.length,
-				// );
 				await getPosts();
 				await getStreak();
+
 				setIsLoading(false);
 			};
 			refresh();
@@ -92,9 +107,9 @@ export default function Home({ navigation }: RouterProps) {
 	}, [fireUser.selfPostsUids]);
 
 	const [streakCount, setStreakCount] = useState<number>(0);
+
 	return (
 		<View style={styles.background}>
-			<SlideOutModal text = {currCat}></SlideOutModal>
 			<View style={[styles.container, { marginTop: 80 }]}>
 				<Text style={{ fontSize: 150 }}>{streakCount}</Text>
 				<Text style={{ fontSize: 30, textAlign: "center" }}>
@@ -109,17 +124,18 @@ export default function Home({ navigation }: RouterProps) {
 				})}
 			</View>
 			<View style={styles.container}>
-				<Button
-					style={styles.button}
+				<TouchableOpacity
+					style={[styles.button, { borderRadius: 10 }]}
 					onPress={() => {
 						signOut(auth);
 					}}
-					title="Sign out"
-				></Button>
+				>
+					<Text style={styles.text}>Sign Out</Text>
+				</TouchableOpacity>
 			</View>
 			<View style={styles.footer}>
 				<ProfileButton />
-				<SelfPostModal runningCat = {jumpChangeCCat} />
+				<SelfPostModal forceLock={forceLock} />
 			</View>
 		</View>
 	);
@@ -136,7 +152,9 @@ const styles = StyleSheet.create({
 		margin: 40,
 	},
 	button: {
-		backgroundColor: "#e9637c",
+		backgroundColor: "#E9637C",
+		padding: 10,
+		alignItems: "center",
 	},
 	footer: {
 		flexDirection: "row",
@@ -145,6 +163,20 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		width: "100%",
 		padding: 25,
+	},
+	phoneSection: {
+		flexDirection: "column",
+		flex: 0.5,
+		backgroundColor: "#F8F4E3",
+		borderRadius: 25,
+		padding: 20,
+		width: "80%",
+	},
+	text: {
+		color: "#F8F4E3",
+		marginVertical: 10,
+		//fontFamily: 'KALAM-REGULAR',
+		fontSize: 18,
 	},
 	modalContainer: {
 		position: 'absolute',

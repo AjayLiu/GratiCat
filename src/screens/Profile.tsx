@@ -267,10 +267,11 @@ export default function Profile({ navigation }: RouterProps) {
 			<View
 				style={[
 					styles.height100,
-					colors.offBlackBG,
+					colors.brownBG,
 					flexbox.column,
 					flexbox.alignCenter,
 					flexbox.justifyStart,
+					{flex: 0.9}
 				]}
 			>
 				<View style = {[{height: 20}]}></View>
@@ -330,7 +331,7 @@ export default function Profile({ navigation }: RouterProps) {
 						selected={day}
 					/>
 				</View>
-				<View style={{ marginTop: 0 }}>
+				<View style={{ marginTop: 0,backgroundColor: '#1d201f' }}>
 					{/* <Text>
 						On {dateToString(day)}, you were grateful for...
 					</Text>
@@ -341,7 +342,8 @@ export default function Profile({ navigation }: RouterProps) {
 							</View>
 						);
 					})} */}
-					<View style = {[{height: 300, width: 364, backgroundColor: '#515052', borderRadius: 25, marginBottom: 20}]}>
+					<View style = {[{height: 800, width: 390, backgroundColor: '#1d201f'}]}>
+					<View style = {[{left: 12, height: 300, width: 364, backgroundColor: '#515052', borderRadius: 25, marginBottom: 20}]}>
 					<TouchableOpacity onPress = {retrieveExperiemental} >
 						<View style = {[{width: 350, backgroundColor: '#706F6F', left: 7, borderRadius: 20, top: 10, height: 36}]}>
 					<View style={[{
@@ -367,11 +369,12 @@ export default function Profile({ navigation }: RouterProps) {
 					</Text>
 					</View>
 					
-				</View>
+				
 				<Animated.View style = {[{opacity: animation2}]}>
 					<DraggableUpView category_ratio= {category_ratio}></DraggableUpView>
 					</Animated.View>
-				
+					</View>
+				</View>
 			</View>
 			
 		</View>
