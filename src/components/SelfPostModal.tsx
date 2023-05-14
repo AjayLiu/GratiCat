@@ -80,7 +80,7 @@ const SelfPostModal = (props: Props) => {
 									alert(cat);
 								}}
 							>
-								<Ionicons name="send-outline" color={"white"} />
+								<Ionicons name="send-outline" color={"white"}/>
 							</Pressable>
 						</View>
 					</View>
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(0,0,0,0.9)",
 	},
 	modalView: {
+		flex: 1,
 		margin: 20,
 		backgroundColor: "#f8f4e3",
 		borderRadius: 20,
