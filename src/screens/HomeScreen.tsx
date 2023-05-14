@@ -10,6 +10,7 @@ import {
 	Animated,
 	TouchableOpacity,
 	ScrollView,
+	ImageBackground,
 } from "react-native";
 import { usePost } from "@utils/hooks/usePost";
 import { Button } from "react-native-elements";
@@ -19,6 +20,7 @@ import { useUser } from "@utils/hooks/useUser";
 import SelfPostModal from "@components/SelfPostModal";
 import logo from "../assets/images/GratiCatLogo.png";
 import ProfileButton from "@components/ProfileButton";
+import CoffeeCupProgressBar from "@components/CoffeeCupProgressBar";
 
 const auth = getAuth();
 
@@ -48,28 +50,6 @@ export default function Home({ navigation }: RouterProps) {
 		}).start(() => {
 			setVisible(false);
 		});
-	};
-
-	const SlideOutModal = ({ text }) => {
-		if (!visible) {
-			return null;
-		}
-
-		return (
-			<Animated.View
-				style={[styles.modalContainer, { opacity: fadeAnim }]}
-			>
-				<Text style={styles.modalText}>{text}</Text>
-			</Animated.View>
-		);
-	};
-
-	const jumpChangeCCat = (newCat) => {
-		reset();
-		console.log(newCat);
-		changeCCat(newCat);
-		setVisible(true);
-		fade();
 	};
 	const resetForceLock = () => {
 		console.log("RESET FORCE LOCK");
@@ -123,23 +103,53 @@ export default function Home({ navigation }: RouterProps) {
 	}, [fireUser.selfPostsUids]);
 
 	const [streakCount, setStreakCount] = useState<number>(0);
+	let progress = mySelfPosts.length > 0 ? (mySelfPosts.length % 5) / 5 : 0;
+	progress =
+		mySelfPosts.length > 0 && (mySelfPosts.length % 5) / 5 === 0
+			? 1
+			: (mySelfPosts.length % 5) / 5;
 
 	return (
 		<View style={styles.background}>
 			<View style={[styles.container, { marginTop: 80 }]}>
-				<Text style={{ fontSize: 150 }}>{streakCount}</Text>
-				<Text style={{ fontSize: 30, textAlign: "center" }}>
+				<Text style={{ fontSize: 150, color: "#1d201f" }}>
+					{streakCount}
+				</Text>
+				<Text
+					style={{
+						fontSize: 30,
+						textAlign: "center",
+						color: "#1d201f",
+					}}
+				>
 					consecutive days you've loved yourself!
 				</Text>
-				{mySelfPosts.map((post) => {
-					return (
-						<View key={post.uid}>
-							<Text>{post.content}</Text>
-						</View>
-					);
-				})}
+				<ImageBackground
+					source={logo}
+					style={{
+						flex: 0.4,
+						width: "100%",
+						height: 175,
+						marginTop: 50,
+						marginBottom: 175,
+					}}
+					resizeMode="contain"
+				/>
 			</View>
 			<View style={styles.container}>
+				<CoffeeCupProgressBar posts={mySelfPosts} />
+			</View>
+			<View style={styles.container}>
+				<Text style={{ fontSize: 30, color: "#1d201f" }}>
+					Gratitude Level: {progress * 100}%
+				</Text>
+			</View>
+			<View style={styles.footer}>
+				<ProfileButton />
+				<SelfPostModal
+					forceLock={forceLock}
+					resetForceLock={resetForceLock}
+				/>
 				<TouchableOpacity
 					style={[styles.button, { borderRadius: 10 }]}
 					onPress={() => {
@@ -148,13 +158,6 @@ export default function Home({ navigation }: RouterProps) {
 				>
 					<Text style={styles.text}>Sign Out</Text>
 				</TouchableOpacity>
-			</View>
-			<View style={styles.footer}>
-				<ProfileButton />
-				<SelfPostModal
-					forceLock={forceLock}
-					resetForceLock={resetForceLock}
-				/>
 			</View>
 		</View>
 	);

@@ -36,7 +36,11 @@ export default function UserStack() {
 				}}
 			>
 				<Stack.Screen name="Home" component={HomeScreen} />
-				<Stack.Screen name="Profile" component={ProfileScreen} />
+				<Stack.Screen
+					name="Profile"
+					component={ProfileScreen}
+					options={{ gestureDirection: "horizontal-inverted" }}
+				/>
 			</Stack.Navigator>
 		</FireUserContext.Provider>
 	);
