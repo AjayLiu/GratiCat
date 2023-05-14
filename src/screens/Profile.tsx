@@ -361,7 +361,7 @@ export default function Profile({ navigation }: RouterProps) {
 							alignItems: 'center'}]}></Animated.View>
 						
 					</View>
-						<Text style = {[{left: 50, top: -16, fontSize: 24, color: 'white', fontStyle:"italic"}]}>{queryText}</Text>
+						<Text style = {[{left: 50, top: -16, fontSize: 24, color: 'white', fontStyle:"italic", fontFamily: "Inter"}]}>{queryText}</Text>
 						</View>
 					</TouchableOpacity>
 					<Text style = {[{height: 300, width: 310, left: 20, color: "white", top: 20, fontSize: 18}]}>

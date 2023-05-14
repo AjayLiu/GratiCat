@@ -67,8 +67,9 @@ const SelfPostModal = (props: Props) => {
 							<Pressable
 								style={[styles.button, styles.buttonSubmit]}
 								onPress={async () => {
-									await makeSelfPost(text);
+									const cat = await makeSelfPost(text);
 									setModalVisible(!modalVisible);
+									alert(cat);
 								}}
 							>
 								<Ionicons name="send-outline" color={"white"} />
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
 		margin: 20,
 		backgroundColor: "#f8f4e3",
 		borderRadius: 20,
-		padding: 30,
+		padding: 10,
 		alignItems: "center",
 		shadowColor: "#000",
 		shadowOffset: {
@@ -113,10 +114,11 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
+		height: 130,
 	},
 	button: {
 		borderRadius: 20,
-		padding: 5,
+		padding: 2,
 		elevation: 2,
 		justifyContent: "center",
 		alignItems: "center",
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
 	buttonSubmit: {
 		backgroundColor: "#1d201f",
 		borderRadius: 5,
-		padding: 5,
+		padding: 10,
 	},
 	input: {
 		flex: 1,
@@ -145,13 +147,14 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 	},
 	note: {
-		marginTop: 20,
+		marginTop: 36,
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
 		backgroundColor: "#d5d0cd",
 		padding: 10,
 		borderRadius: 10,
+		height: 70
 	},
 	textStyle: {
 		color: "white",

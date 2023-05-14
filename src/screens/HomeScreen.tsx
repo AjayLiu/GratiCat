@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { RouterProps } from "../types";
-import { View, Text, StyleSheet, TextInput, Platform, Modal, Animated, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, Platform, Modal, Animated, TouchableOpacity, ScrollView } from "react-native";
 import { usePost } from "@utils/hooks/usePost";
 import { Button } from "react-native-elements";
 import { SelfPost } from "../types";
@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
 		marginVertical: 10,
 		//fontFamily: 'KALAM-REGULAR',
 		fontSize: 18,
+		fontFamily: 'KALAM-REGULAR',
 	},
 	modalContainer: {
 		position: 'absolute',
