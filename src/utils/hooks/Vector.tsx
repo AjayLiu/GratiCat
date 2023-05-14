@@ -88,7 +88,7 @@ export async function get_summary(list_of_thanks: Array<string>){
     const api_url = "https://api.openai.com/v1/chat/completions";
     const model = "gpt-3.5-turbo";
     const prompt = "This is a list of things I am thankful for: " 
-    + JSON.stringify(lower_token_sample(list_of_thanks)) + ". Summarise this into a short sentence capturing 4-5 key ideas. Refer to me as you.";
+    + JSON.stringify(lower_token_sample(list_of_thanks)) + ". Summarise this into a short sentence capturing 1-5 specific key ideas. Refer to me as you.";
 
     const get_summary = async () => {
         try{

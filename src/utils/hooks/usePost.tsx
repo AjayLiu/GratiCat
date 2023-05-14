@@ -56,7 +56,6 @@ export function usePost() {
 			content: content,
 			category: category,
 		};
-		console.log(category);
 
 		// add self post to self posts collection
 		await setDoc(doc(db, "selfPosts", selfPost.uid), selfPost);
