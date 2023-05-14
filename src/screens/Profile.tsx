@@ -93,13 +93,15 @@ export default function Profile({ navigation }: RouterProps) {
 
 	return (
 		<View style={{ flex: 1 }}>
+			<View style={{flex: 0.1, backgroundColor: "#846C5B"}} />
 			<View
 				style={[
 					styles.height100,
-					colors.offBlackBG,
+					colors.brownBG,
 					flexbox.column,
 					flexbox.alignCenter,
 					flexbox.justifyStart,
+					{flex: 0.9}
 				]}
 			>
 				<ProfilePicture

@@ -11,10 +11,10 @@ export default StyleSheet.create({
 		backgroundColor: "#232020",
 	},
 	offWhite: {
-		color: "#e2e4f6",
+		color: "#f8f4e3",
 	},
 	offWhiteBG: {
-		backgroundColor: "#e2e4f6",
+		backgroundColor: "#f8f4e3",
 	},
 	darkGreen: {
 		color: "#138a36",
@@ -33,6 +33,12 @@ export default StyleSheet.create({
 	},
 	blueBG: {
 		backgroundColor: "#427aa1",
+	},
+	brownBG: {
+		backgroundColor: "#846C5B",
+	},
+	lightGray: {
+		backgroundColor: "#d5d0cd"
 	},
 	// standard colors
 	black: {
