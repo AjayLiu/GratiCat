@@ -60,9 +60,7 @@ const PieChartRatio = (props: any) => {
             colors.push(colors_raw[i]);
         }
         
-    
 
-        console.log("yo where tf my piechart")
         return (
          
             <View style={styles.container}>

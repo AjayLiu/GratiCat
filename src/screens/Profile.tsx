@@ -17,6 +17,7 @@ import { get_summary } from "@utils/hooks/Vector";
 import PieChartRatio from "@components/ProfileStats";
 import { PanResponder, Animated } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
+import ListModal from "@components/ThankListModal";
 
 const DraggableUpView = (props: any) => {
 	if(true){
@@ -77,6 +78,8 @@ export default function Profile({ navigation }: RouterProps) {
 	const [startedAnimation, setAnim] = useState(false);
 	const [queryText, changeQueryText] = useState("want a review...?");
 	const [readyGuard, changeReady] = useState(false);
+	const [listModalVisible, setListModVis] = useState(false);
+	const [thankListString, changeThankListString] = useState("");
 	const [day, setDay] = useState<DateData>({
 		year: new Date().getFullYear(),
 		month: new Date().getMonth() + 1,
@@ -211,12 +214,20 @@ export default function Profile({ navigation }: RouterProps) {
 		});
 		setPostsToDisplay(postsToShow);
 		
-		
 	};
+	const closeModal = () => {
+		setListModVis(false);
+	  };
 
 	function dayPress(date: DateData) {
 		getPostsForDay(date);
 		setDay(date);
+		let ans = "";
+		for(let i = 0 ; i < postsToDisplay.length; ++i){
+			ans += postsToDisplay + '\n';
+		}
+		changeThankListString(ans);
+		setListModVis(true);
 	}
 
 	function dateToString(day: DateData) {
@@ -246,11 +257,13 @@ export default function Profile({ navigation }: RouterProps) {
 			changeReady(true);
 		};
 		getStreak();
+		console.log(listModalVisible);
 	}, []);
 	const [streak, setStreak] = useState<number>(0);
 
 	return (
 		<View style={{ flex: 1 }}>
+			<ListModal seeable = {listModalVisible} onClose = {closeModal} reading = {postsToDisplay}></ListModal>
 			<View
 				style={[
 					styles.height100,
