@@ -62,7 +62,6 @@ export default function Home({ navigation }: RouterProps) {
 				})}
 			</View>
 			<View style={styles.container}>
-				<SelfPostModal />
 				<Button
 					style={styles.button}
 					onPress={() => {
@@ -73,6 +72,7 @@ export default function Home({ navigation }: RouterProps) {
 			</View>
 			<View style={styles.footer}>
 				<ProfileButton />
+				<SelfPostModal />
 			</View>
 		</View>
 	);
