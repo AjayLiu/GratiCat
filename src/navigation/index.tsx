@@ -7,6 +7,7 @@ export default function RootNavigation() {
 
 	if (!isSignedIn) {
 		return <AuthStack />;
+	} else {
+		return <UserStack />;
 	}
-	return <UserStack />;
 }

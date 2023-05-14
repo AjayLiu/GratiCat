@@ -1,23 +1,14 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
 	deleteUser,
 	getAuth,
 	onAuthStateChanged,
 	signOut,
-	updateProfile,
 	User,
 } from "firebase/auth";
 import { FirestoreUser } from "src/types";
-import {
-	getDoc,
-	doc,
-	setDoc,
-	updateDoc,
-	deleteDoc,
-	arrayRemove,
-	arrayUnion,
-} from "firebase/firestore";
+import { getDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@config/firebase";
 
 const auth = getAuth();
@@ -46,6 +37,24 @@ export function useUser() {
 	}, []);
 
 	const isSignedIn = authUser !== undefined;
+	const createUser = async () => {
+		// Some default user values
+		const defaultProfilePic =
+			"https://img.freepik.com/free-icon/user_318-864557.jpg?w=2000";
+
+		const defaultDisplayName = "User";
+
+		await writeToUserFirestore({
+			uid: authUser?.uid || "ERROR",
+			displayName: defaultDisplayName,
+			photoUrl: defaultProfilePic,
+			friendsUids: [],
+			selfPostsUids: [],
+			socialPostsUids: [],
+			phoneNumber: authUser?.phoneNumber || "ERROR",
+		});
+		console.log("User created successfully.");
+	};
 
 	const writeToUserFirestore = async (user: FirestoreUser) => {
 		try {
@@ -107,6 +116,7 @@ export function useUser() {
 	return {
 		authUser,
 		isSignedIn,
+		createUser,
 		writeToUserFirestore,
 		getUserFromFirestore,
 		updateUserFirestore,

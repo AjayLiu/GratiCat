@@ -10,45 +10,23 @@ export interface FirestoreUser {
 	uid: string;
 	displayName: string;
 	photoUrl: string;
-	email: string;
+	phoneNumber: string;
+	selfPostsUids: string[];
+	socialPostsUids: string[];
 	friendsUids: string[];
-	postsUids: string[];
-	completedChallengesUids: string[];
-	score: number;
 }
 
-export interface Post {
-	uid: string;
-	imgUrl: string;
-	caption: string;
-	authorUid: string;
-	timestamp: Timestamp;
-	comments: Comment[];
-	likes: Like[];
-	challengeUid: string;
-}
-
-export interface Comment {
+export interface SelfPost {
 	uid: string;
 	authorUid: string;
-	postUid: string;
 	timestamp: Timestamp;
-	text: string;
+	content: string;
 }
 
-export interface Like {
+export interface SocialPost {
 	uid: string;
 	authorUid: string;
-	postUid: string;
+	recipientUid: string;
 	timestamp: Timestamp;
-}
-
-export interface Challenge {
-	uid: string;
-	title: string;
-	description: string;
-	impact: string;
-	points: number;
-	startTime: Timestamp;
-	expirationTime: Timestamp;
+	content: string;
 }

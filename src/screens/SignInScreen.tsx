@@ -20,6 +20,7 @@ import {
 import fbConfig from "../config/firebase";
 import firebase from "firebase/app";
 import { RouterProps } from "src/types";
+import { useUser } from "@utils/hooks/useUser";
 
 // try { firebase.initializeApp(fbConfig.options);
 // } catch (error) {
@@ -35,6 +36,7 @@ const auth = getAuth(app);
 // }
 
 export default function SignInScreen({ navigation }: RouterProps) {
+	const { createUser } = useUser();
 	const recaptchaVerifier = useRef(null);
 
 	const [phoneNumber, setPhoneNumber] = useState("");
@@ -66,7 +68,8 @@ export default function SignInScreen({ navigation }: RouterProps) {
 			); // get the credential
 			await signInWithCredential(auth, credential); // verify the credential
 			setInfo("Success: Phone authentication successful"); // if OK, set the message
-			navigation.navigate("Home"); // navigate to the welcome screen
+
+			// navigation.navigate("Home"); // navigate to the welcome screen
 		} catch (error) {
 			setInfo(`Error : ${error}`); // show the error.
 		}
