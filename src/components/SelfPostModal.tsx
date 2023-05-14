@@ -14,7 +14,6 @@ import {
 
 const SelfPostModal = () => {
 	const { makeSelfPost } = usePost();
-	const { fetchFireUser } = useUser();
 	const [modalVisible, setModalVisible] = useState(false);
 	const [text, onChangeText] = React.useState("");
 	return (
@@ -50,7 +49,6 @@ const SelfPostModal = () => {
 							style={[styles.button, styles.buttonClose]}
 							onPress={async () => {
 								await makeSelfPost(text);
-								await fetchFireUser();
 							}}
 						>
 							<Text> Submit </Text>

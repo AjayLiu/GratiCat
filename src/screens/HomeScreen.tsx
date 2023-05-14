@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { RouterProps } from "../types";
-import {
-	View,
-	Text,
-	StyleSheet,
-	TextInput,
-	Platform,
-} from "react-native";
+import { View, Text, StyleSheet, TextInput, Platform } from "react-native";
 import { usePost } from "@utils/hooks/usePost";
 import { Button } from "react-native-elements";
 import { SelfPost } from "../types";
@@ -18,18 +12,38 @@ const auth = getAuth();
 
 export default function Home({ navigation }: RouterProps) {
 	const { authUser, fireUser } = useUser();
-	const { getAllSelfPosts } = usePost();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const { getAllSelfPosts, calculateStreakCount } = usePost();
 	const [mySelfPosts, setMySelfPosts] = useState<SelfPost[]>([]);
 	useEffect(() => {
 		const getPosts = async () => {
-			setMySelfPosts((await getAllSelfPosts(authUser?.uid || "")) || []);
+			const allPosts = await getAllSelfPosts(authUser?.uid || "");
+			setMySelfPosts(allPosts || []);
+		};
+		const getStreak = async () => {
+			const streak = await calculateStreakCount();
+			setStreakCount(streak);
 		};
 
-		if (authUser) {
-			// console.log("authUser found.");
-			getPosts();
+		if (
+			!isLoading &&
+			fireUser?.selfPostsUids &&
+			fireUser.selfPostsUids.length != mySelfPosts.length
+		) {
+			const refresh = async () => {
+				setIsLoading(true);
+				console.log(
+					fireUser.selfPostsUids.length + " vs " + mySelfPosts.length,
+				);
+				await getPosts();
+				await getStreak();
+				setIsLoading(false);
+			};
+			refresh();
 		}
 	}, [fireUser.selfPostsUids]);
+
+	const [streakCount, setStreakCount] = useState<number>(0);
 	return (
 		<View>
 			{mySelfPosts.map((post) => {
@@ -48,6 +62,7 @@ export default function Home({ navigation }: RouterProps) {
 				></Button>
 			</View>
 			<SelfPostModal />
+			<Text>{streakCount}</Text>
 		</View>
 	);
 }

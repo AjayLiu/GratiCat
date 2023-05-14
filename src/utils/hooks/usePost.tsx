@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
 
-import {
-	deleteUser,
-	getAuth,
-	onAuthStateChanged,
-	signOut,
-	User,
-} from "firebase/auth";
+import {} from "firebase/auth";
 import { FirestoreUser, SelfPost, SocialPost } from "src/types";
 import {
 	getDoc,
 	doc,
 	setDoc,
 	updateDoc,
-	deleteDoc,
-	getDocs,
 	Timestamp,
 	arrayUnion,
 } from "firebase/firestore";
@@ -69,5 +61,38 @@ export function usePost() {
 		});
 		await fetchFireUser();
 	};
-	return { getAllSelfPosts, makeSelfPost };
+
+	const calculateStreakCount = async () => {
+		const posts = await getAllSelfPosts(fireUser?.uid || "");
+		if (!posts || posts.length === 0) {
+			return 0;
+		}
+
+		let streakEndDate = posts[posts.length - 1].timestamp.toDate();
+		let i = posts.length - 1;
+		while (i > 0) {
+			const post = posts[i];
+			const prevPost = posts[i - 1];
+			const postDate = post.timestamp.toDate();
+			const prevPostDate = prevPost.timestamp.toDate();
+			const diff = postDate.getTime() - prevPostDate.getTime();
+			const diffInDays = diff / (1000 * 3600 * 24);
+			if (diffInDays > 1.5) {
+				break;
+			}
+			streakEndDate = postDate;
+			i--;
+		}
+		const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+
+		const currentTime = Date.now(); // Current time in milliseconds
+		const timeDifference = currentTime - streakEndDate?.getTime(); // Difference in milliseconds
+
+		// Calculate the difference in days
+		const differenceDays = Math.round(timeDifference / oneDay);
+
+		return differenceDays + 1;
+	};
+
+	return { getAllSelfPosts, makeSelfPost, calculateStreakCount };
 }
