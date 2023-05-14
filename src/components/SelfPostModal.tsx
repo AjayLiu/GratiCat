@@ -1,6 +1,7 @@
 import { usePost } from "@utils/hooks/usePost";
 import { useUser } from "@utils/hooks/useUser";
 import React, { useState } from "react";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 import {
 	Alert,
@@ -18,7 +19,7 @@ const SelfPostModal = () => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [text, onChangeText] = React.useState("");
 	return (
-		<View style={styles.centeredView}>
+		<View>
 			<Modal
 				animationType="slide"
 				transparent={true}
@@ -34,27 +35,27 @@ const SelfPostModal = () => {
 							style={[styles.button, styles.buttonClose]}
 							onPress={() => setModalVisible(!modalVisible)}
 						>
-							<Text> Close </Text>
+							<Ionicons name="close-circle-outline" size={20} />
 						</Pressable>
-						<Text style={styles.modalText}>
-							I'm thankful for...
-						</Text>
-						<TextInput
-							style={styles.input}
-							onChangeText={onChangeText}
-							value={text}
-							placeholder="Write text here"
-							placeholderTextColor={"#846c5b"}
-						/>
-						<Pressable
-							style={[styles.button, styles.buttonClose]}
-							onPress={async () => {
-								await makeSelfPost(text);
-								await fetchFireUser();
-							}}
-						>
-							<Text> Submit </Text>
-						</Pressable>
+						<View style={styles.note}>
+							<TextInput
+								style={styles.input}
+								onChangeText={onChangeText}
+								value={text}
+								multiline={true}
+								placeholder="I'm thankful for..."
+								placeholderTextColor={"#846c5b"}
+							/>
+							<Pressable
+								style={[styles.button, styles.buttonSubmit]}
+								onPress={async () => {
+									await makeSelfPost(text);
+									await fetchFireUser();
+								}}
+							>
+								<Ionicons name="send-outline" color={"white"} />
+							</Pressable>
+						</View>
 					</View>
 				</View>
 			</Modal>
@@ -73,13 +74,13 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: 22,
+		marginTop: 10,
 	},
 	modalView: {
 		margin: 20,
 		backgroundColor: "white",
 		borderRadius: 20,
-		padding: 35,
+		padding: 30,
 		alignItems: "center",
 		shadowColor: "#000",
 		shadowOffset: {
@@ -92,29 +93,42 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		borderRadius: 20,
-		padding: 10,
+		padding: 5,
 		elevation: 2,
 	},
 	buttonOpen: {
-		backgroundColor: "#F194FF",
+		backgroundColor: "#e9637c",
 	},
 	buttonClose: {
-		backgroundColor: "#2196F3",
+		backgroundColor: "#e9637c",
+		position: "absolute",
+		top: 5,
+		right: 5,
+	},
+	buttonSubmit: {
+		backgroundColor: "#1d201f",
+		borderRadius: 5,
+		padding: 5,
 	},
 	input: {
-		height: 40,
-		margin: 12,
-		borderWidth: 0.5,
-		borderRadius: 20,
+		flex: 1,
+		marginRight: 10,
+		padding: 5,
+		backgroundColor: "white",
+		borderRadius: 5,
+	},
+	note: {
+		marginTop: 20,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		backgroundColor: "#d5d0cd",
 		padding: 10,
+		borderRadius: 10,
 	},
 	textStyle: {
 		color: "white",
 		fontWeight: "bold",
-		textAlign: "center",
-	},
-	modalText: {
-		marginBottom: 15,
 		textAlign: "center",
 	},
 });
