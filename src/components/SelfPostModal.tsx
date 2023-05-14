@@ -1,6 +1,6 @@
 import { usePost } from "@utils/hooks/usePost";
 import { useUser } from "@utils/hooks/useUser";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import {
@@ -13,10 +13,23 @@ import {
 	TextInput,
 } from "react-native";
 
-const SelfPostModal = () => {
+import { SelfPost } from "src/types";
+
+interface Props {
+	forceLock: boolean;
+}
+const SelfPostModal = (props: Props) => {
 	const { makeSelfPost } = usePost();
 	const [modalVisible, setModalVisible] = useState(false);
+	const [xButtonVisible, setXButtonVisible] = useState(true);
 	const [text, onChangeText] = React.useState("");
+	const forceLock = async () => {
+		setModalVisible(true);
+		setXButtonVisible(false);
+	};
+	useEffect(() => {
+		if (props.forceLock) forceLock();
+	}, [props.forceLock]);
 	return (
 		<View>
 			<Modal
@@ -30,12 +43,17 @@ const SelfPostModal = () => {
 			>
 				<View style={styles.centeredView}>
 					<View style={styles.modalView}>
-						<Pressable
-							style={[styles.button, styles.buttonClose]}
-							onPress={() => setModalVisible(!modalVisible)}
-						>
-							<Ionicons name="close-circle-outline" size={20} />
-						</Pressable>
+						{xButtonVisible && (
+							<Pressable
+								style={[styles.button, styles.buttonClose]}
+								onPress={() => setModalVisible(!modalVisible)}
+							>
+								<Ionicons
+									name="close-circle-outline"
+									size={20}
+								/>
+							</Pressable>
+						)}
 						<View style={styles.note}>
 							<TextInput
 								style={styles.input}
@@ -49,9 +67,10 @@ const SelfPostModal = () => {
 								style={[styles.button, styles.buttonSubmit]}
 								onPress={async () => {
 									await makeSelfPost(text);
+									setModalVisible(!modalVisible);
 								}}
 							>
-								<Ionicons name="send-outline" color={"#f8f4e3"}/>
+								<Ionicons name="send-outline" color={"white"} />
 							</Pressable>
 						</View>
 					</View>
@@ -77,6 +96,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		marginTop: 10,
+		backgroundColor: "rgba(0,0,0,0.9)",
 	},
 	modalView: {
 		margin: 20,

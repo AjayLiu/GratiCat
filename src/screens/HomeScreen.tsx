@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { RouterProps } from "../types";
-import { View, Text, StyleSheet, TextInput, Platform, TouchableOpacity} from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	TextInput,
+	Platform,
+	TouchableOpacity,
+} from "react-native";
 import { usePost } from "@utils/hooks/usePost";
 import { Button } from "react-native-elements";
 import { SelfPost } from "../types";
@@ -17,9 +24,26 @@ export default function Home({ navigation }: RouterProps) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const { getAllSelfPosts, calculateStreakCount } = usePost();
 	const [mySelfPosts, setMySelfPosts] = useState<SelfPost[]>([]);
+	const [forceLock, setForceLock] = useState<boolean>(false);
 	useEffect(() => {
 		const getPosts = async () => {
 			const allPosts = await getAllSelfPosts(authUser?.uid || "");
+
+			// CHECK WHETHER OR NOT TO LOCK USER OUT (IF THEY HAVEN'T POSTED IN 24 HOURS OR NEVER POSTED)
+			if (authUser?.uid) {
+				if (!allPosts || allPosts?.length == 0) {
+					setForceLock(true);
+				} else {
+					const latestPost = allPosts[allPosts.length - 1];
+					if (
+						Date.now() / 1000 - latestPost.timestamp.seconds >
+						60 * 60 * 24
+					) {
+						setForceLock(true);
+					}
+				}
+			}
+
 			setMySelfPosts(allPosts || []);
 		};
 		const getStreak = async () => {
@@ -34,11 +58,9 @@ export default function Home({ navigation }: RouterProps) {
 		) {
 			const refresh = async () => {
 				setIsLoading(true);
-				// console.log(
-				// 	fireUser.selfPostsUids.length + " vs " + mySelfPosts.length,
-				// );
 				await getPosts();
 				await getStreak();
+
 				setIsLoading(false);
 			};
 			refresh();
@@ -46,14 +68,35 @@ export default function Home({ navigation }: RouterProps) {
 	}, [fireUser.selfPostsUids]);
 
 	const [streakCount, setStreakCount] = useState<number>(0);
+
 	return (
 		<View style={styles.background}>
-			<View style={[styles.container, styles.phoneSection, { marginTop: 80 }]}>
-			<Text style={{ fontSize: 35, textAlign: "center", color: "#1D201F" }}>
+			<View
+				style={[
+					styles.container,
+					styles.phoneSection,
+					{ marginTop: 80 },
+				]}
+			>
+				<Text
+					style={{
+						fontSize: 35,
+						textAlign: "center",
+						color: "#1D201F",
+					}}
+				>
 					you've loved yourself for
 				</Text>
-				<Text style={{ fontSize: 150, color: "#1D201F" }}>{streakCount}</Text>
-				<Text style={{ fontSize: 35, textAlign: "center", color: "#1D201F" }}>
+				<Text style={{ fontSize: 150, color: "#1D201F" }}>
+					{streakCount}
+				</Text>
+				<Text
+					style={{
+						fontSize: 35,
+						textAlign: "center",
+						color: "#1D201F",
+					}}
+				>
 					days in a row!
 				</Text>
 				{mySelfPosts.map((post) => {
@@ -66,19 +109,17 @@ export default function Home({ navigation }: RouterProps) {
 			</View>
 			<View style={styles.container}>
 				<TouchableOpacity
-							style={[styles.button, {borderRadius: 10}]}
-							onPress={() => {
-								signOut(auth);
-							}}
-						>
-							<Text style={styles.text}>
-								Sign Out
-							</Text>
-						</TouchableOpacity>
+					style={[styles.button, { borderRadius: 10 }]}
+					onPress={() => {
+						signOut(auth);
+					}}
+				>
+					<Text style={styles.text}>Sign Out</Text>
+				</TouchableOpacity>
 			</View>
 			<View style={styles.footer}>
 				<ProfileButton />
-				<SelfPostModal />
+				<SelfPostModal forceLock={forceLock} />
 			</View>
 		</View>
 	);
@@ -95,9 +136,9 @@ const styles = StyleSheet.create({
 		margin: 40,
 	},
 	button: {
-		backgroundColor: '#E9637C',
+		backgroundColor: "#E9637C",
 		padding: 10,
-		alignItems: 'center',
+		alignItems: "center",
 	},
 	footer: {
 		flexDirection: "row",
@@ -108,13 +149,13 @@ const styles = StyleSheet.create({
 		padding: 25,
 	},
 	phoneSection: {
-        flexDirection: "column",
+		flexDirection: "column",
 		flex: 0.5,
-		backgroundColor: '#F8F4E3',
-        borderRadius: 25,
-        padding: 20,
-        width: '80%'
-    },
+		backgroundColor: "#F8F4E3",
+		borderRadius: 25,
+		padding: 20,
+		width: "80%",
+	},
 	text: {
 		color: "#F8F4E3",
 		marginVertical: 10,
