@@ -5,6 +5,8 @@ import {
 	TextInput,
 	Button,
 	Platform,
+	TouchableOpacity,
+	Image,
 } from "react-native";
 import { useState, useRef } from "react";
 import { getApp, initializeApp } from "firebase/app";
@@ -21,6 +23,7 @@ import fbConfig from "../config/firebase";
 import firebase from "firebase/app";
 import { RouterProps } from "src/types";
 import { useUser } from "@utils/hooks/useUser";
+import logo from "../assets/images/GratiCatLogo.png";
 
 // try { firebase.initializeApp(fbConfig.options);
 // } catch (error) {
@@ -76,6 +79,7 @@ export default function SignInScreen({ navigation }: RouterProps) {
 	};
 	return (
 		<View style={styles.container}>
+			<Image source={logo} style={{width: 100, height: 100}} />
 			<FirebaseRecaptchaVerifierModal
 				ref={recaptchaVerifier}
 				firebaseConfig={firebaseConfig}
@@ -86,8 +90,8 @@ export default function SignInScreen({ navigation }: RouterProps) {
 			{
 				// show the phone number input field when verification id is not set.
 				!verificationId && (
-					<View>
-						<Text style={styles.text}>Enter the phone number</Text>
+					<View style={styles.container}>
+						<Text style={styles.text}>Phone Number</Text>
 
 						<TextInput
 							placeholder="+2547000000"
@@ -100,11 +104,15 @@ export default function SignInScreen({ navigation }: RouterProps) {
 							}
 						/>
 
-						<Button
+						<TouchableOpacity
+							style={styles.button}
 							onPress={() => handleSendVerificationCode()}
-							title="Send Verification Code"
 							disabled={!phoneNumber}
-						/>
+						>
+							<Text style={styles.text}>
+								Send Verification Code
+							</Text>
+						</TouchableOpacity>
 					</View>
 				)
 			}
@@ -139,12 +147,17 @@ export default function SignInScreen({ navigation }: RouterProps) {
 
 const styles = StyleSheet.create({
 	text: {
-		color: "#aaa",
+		color: "#1D201F",
 	},
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: "#846C5B",
 		alignItems: "center",
 		justifyContent: "center",
 	},
+	button: {
+		backgroundColor: '#E9637C',
+		padding: 10,
+		alignItems: 'center',
+	  },
 });
