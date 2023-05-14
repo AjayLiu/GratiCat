@@ -105,8 +105,8 @@ export default function SignInScreen({ navigation }: RouterProps) {
 						<TextInput
 							style={styles.input}
 							placeholder="+2547000000"
+							placeholderTextColor="#F8F4E3"
 							autoFocus
-							
 							autoComplete="tel"
 							keyboardType="phone-pad"
 							textContentType="telephoneNumber"
@@ -140,6 +140,7 @@ export default function SignInScreen({ navigation }: RouterProps) {
 							style={styles.input}
 							editable={!!verificationId}
 							placeholder="123456"
+							placeholderTextColor="#F8F4E3"
 							onChangeText={setVerificationCode}
 						/>
 						<TouchableOpacity
